@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.zeus.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ClientConnectionMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "EntityMixin",
+    "RenderTickCounterDynamicMixin",
+    "CameraMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
