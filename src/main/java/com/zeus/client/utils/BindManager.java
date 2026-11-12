@@ -18,6 +18,7 @@ public class BindManager {
             else if (client.currentScreen instanceof ClickGuiScreen) client.setScreen(null);
         }
         prevOpenGui = openGuiPressed;
+
         if (client.currentScreen == null && listeningModule == null) {
             for (Module m : ModuleManager.modules) {
                 if (m.getKey() != GLFW.GLFW_KEY_UNKNOWN && isKeyPressed(window, m.getKey())) {
