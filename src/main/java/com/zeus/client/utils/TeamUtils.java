@@ -6,6 +6,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -16,13 +17,19 @@ public class TeamUtils {
         ClientPlayerEntity player = mc.player;
         if (player == null || target == null) return false;
         if (target == player) return true;
+        if (target instanceof PlayerEntity tp
+                && TargetValidator.protectFriends
+                && Friends.isFriend(tp.getName().getString())) return true;
         if (player.isTeammate(target)) return true;
+
         TextColor pc = getTextColor(player.getDisplayName());
         TextColor tc = getTextColor(target.getDisplayName());
         if (pc != null && tc != null && pc.equals(tc)) return true;
+
         Formatting pl = getLegacyColor(player.getDisplayName());
         Formatting tl = getLegacyColor(target.getDisplayName());
         if (pl != null && tl != null && pl == tl) return true;
+
         return sameArmorColor(player, target);
     }
 
@@ -54,7 +61,12 @@ public class TeamUtils {
     }
 
     private static int getArmorColor(LivingEntity entity) {
-        EquipmentSlot[] slots = { EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
+        EquipmentSlot[] slots = {
+                EquipmentSlot.HEAD,
+                EquipmentSlot.CHEST,
+                EquipmentSlot.LEGS,
+                EquipmentSlot.FEET
+        };
         for (EquipmentSlot slot : slots) {
             int color = getDyedColor(entity.getEquippedStack(slot));
             if (color != -1) return color;
