@@ -22,6 +22,13 @@ public class ConfigManager {
                 JsonObject o = new JsonObject();
                 o.addProperty("enabled", m.isEnabled());
                 o.addProperty("key", m.getKey());
+                JsonObject so = new JsonObject();
+                for (Setting<?> s : m.getSettings()) {
+                    if (s instanceof Setting.NumberSetting n) so.addProperty(s.getName(), n.get());
+                    else if (s instanceof Setting.BooleanSetting b) so.addProperty(s.getName(), b.get());
+                    else if (s instanceof Setting.ModeSetting mo) so.addProperty(s.getName(), mo.get());
+                }
+                o.add("settings", so);
                 root.add(m.getName(), o);
             }
             root.addProperty("openGuiKey", BindManager.openGuiKey);
@@ -44,6 +51,15 @@ public class ConfigManager {
                 m.setKey(o.get("key").getAsInt());
                 boolean enabled = o.get("enabled").getAsBoolean();
                 if (enabled != m.isEnabled()) m.toggle();
+                if (o.has("settings")) {
+                    JsonObject so = o.getAsJsonObject("settings");
+                    for (Setting<?> s : m.getSettings()) {
+                        if (!so.has(s.getName())) continue;
+                        if (s instanceof Setting.NumberSetting n) n.setDouble(so.get(s.getName()).getAsDouble());
+                        else if (s instanceof Setting.BooleanSetting b) b.set(so.get(s.getName()).getAsBoolean());
+                        else if (s instanceof Setting.ModeSetting mo) mo.set(so.get(s.getName()).getAsString());
+                    }
+                }
             }
             if (root.has("openGuiKey")) BindManager.openGuiKey = root.get("openGuiKey").getAsInt();
             return true;
