@@ -1,0 +1,14 @@
+package com.zeus.client.modules.render;
+
+import com.zeus.client.utils.Category;
+import com.zeus.client.utils.Module;
+import org.lwjgl.glfw.GLFW;
+
+public class NoParticles extends Module {
+    public NoParticles() { super("NoParticles", Category.RENDER, GLFW.GLFW_KEY_UNKNOWN); }
+
+    @Override
+    public void onTick() {
+        if (mc.particleManager != null) mc.particleManager.clear();
+    }
+}
